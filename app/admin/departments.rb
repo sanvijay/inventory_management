@@ -1,5 +1,6 @@
-ActiveAdmin.register Department do
+# frozen_string_literal: true
 
+ActiveAdmin.register Department do
   permit_params :name
 
   index do

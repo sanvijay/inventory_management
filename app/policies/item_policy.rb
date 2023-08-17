@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ItemPolicy < ApplicationPolicy
   class Scope
     def initialize(user, scope)
@@ -15,15 +17,15 @@ class ItemPolicy < ApplicationPolicy
   end
 
   def index?
-    user.role.in?(['admin', 'purchase'])
+    user.role.in?(["admin", "purchase"])
   end
 
   def show?
-    user.role.in?(['admin', 'purchase'])
+    user.role.in?(["admin", "purchase"])
   end
 
   def create?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def new?
@@ -31,7 +33,7 @@ class ItemPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def edit?
@@ -43,10 +45,10 @@ class ItemPolicy < ApplicationPolicy
   end
 
   def verify?
-    user.role.in?(['admin', 'purchase'])
+    user.role.in?(["admin", "purchase"])
   end
 
   def bulk_verify?
-    user.role.in?(['admin', 'purchase'])
+    user.role.in?(["admin", "purchase"])
   end
 end

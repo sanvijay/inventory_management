@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -5,7 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, 
+  devise :database_authenticatable,
          :recoverable, :rememberable, :validatable
 
   # Purchase Department
@@ -14,8 +16,8 @@ class User < ApplicationRecord
   # CMMP Department
 
   enum role: {
-    'admin' => 'admin',
-    'purchase' =>  'purchase'
+    "admin" => "admin",
+    "purchase" =>  "purchase"
   }
 
   def self.ransackable_attributes(auth_object = nil)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DepartmentPolicy < ApplicationPolicy
   class Scope
     def initialize(user, scope)
@@ -15,15 +17,15 @@ class DepartmentPolicy < ApplicationPolicy
   end
 
   def index?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def show?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def create?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def new?
@@ -31,7 +33,7 @@ class DepartmentPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role == 'admin'
+    user.role == "admin"
   end
 
   def edit?

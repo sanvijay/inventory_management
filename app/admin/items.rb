@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Item do
   permit_params :name, :model_number, :description, :reference_url, :image_url
 
-  sidebar :history, partial: 'layouts/version', only: :show
+  sidebar :history, partial: "layouts/version", only: :show
 
   controller do
     def show
@@ -32,7 +34,7 @@ ActiveAdmin.register Item do
       row :description
       row :reference_url
       row :image do |item|
-        image_tag item.image_url, style: 'height:100px;width:auto;'
+        image_tag item.image_url, style: "height:100px;width:auto;"
       end
     end
   end

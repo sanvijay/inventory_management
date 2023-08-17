@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 ActiveAdmin.register Inventory do
   permit_params :department_id, :requested_quantity, :item_id
 
-  sidebar :history, partial: 'layouts/version', only: :show
+  sidebar :history, partial: "layouts/version", only: :show
 
   controller do
     def show
@@ -46,16 +48,16 @@ ActiveAdmin.register Inventory do
     column :image do |inventory|
       item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
 
-      image_tag item.image_url, style: 'height:60px;width:auto;'
+      image_tag item.image_url, style: "height:60px;width:auto;"
     end
 
     actions defaults: true do |inventory|
-      link_to 'Verify', verify_admin_inventory_path(inventory), method: :put if policy(inventory).verify?
+      link_to "Verify", verify_admin_inventory_path(inventory), method: :put if policy(inventory).verify?
     end
   end
 
   batch_action :bulk_verify, if: proc { policy(Inventory).bulk_verify? }  do |ids|
-    batch_action_collection.where(state: 'created', id: ids).each do |inventory|
+    batch_action_collection.where(state: "created", id: ids).each do |inventory|
       inventory.verify!(:verified, current_user.id) if policy(inventory).verify?
     end
 
@@ -71,7 +73,7 @@ ActiveAdmin.register Inventory do
   end
 
   action_item :verify, only: :show, if: proc { policy(resource).verify? } do
-    link_to 'Verify', verify_admin_inventory_path(resource), method: :put
+    link_to "Verify", verify_admin_inventory_path(resource), method: :put
   end
 
   form do |f|

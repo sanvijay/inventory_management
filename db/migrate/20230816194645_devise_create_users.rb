@@ -43,6 +43,6 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.0]
     # add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,         unique: true
 
-    User.create!(email: 'admin@admin.com', password: '5cf20fc705df8e0dfec6b7', password_confirmation: '5cf20fc705df8e0dfec6b7', role: 'admin')
+    User.create!(email: "admin@admin.com", password: "5cf20fc705df8e0dfec6b7", password_confirmation: "5cf20fc705df8e0dfec6b7", role: "admin")
   end
 end

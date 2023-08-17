@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveAdmin::PagePolicy
   attr_reader :user, :record
 
@@ -7,6 +9,6 @@ class ActiveAdmin::PagePolicy
   end
 
   def show?
-    record.name == 'Dashboard'
+    record.name == "Dashboard"
   end
 end
