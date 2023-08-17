@@ -2,6 +2,7 @@
 
 ActiveAdmin.register Inventory do
   permit_params :department_id, :requested_quantity, :item_id
+  config.clear_action_items!
 
   sidebar :history, partial: "layouts/version", only: :show
 
@@ -12,6 +13,12 @@ ActiveAdmin.register Inventory do
 
       # @inventory = @inventory.versions[params[:version].to_i].reify if params[:version]
       show!
+    end
+
+    def new
+      @inventory = Inventory.new(item_id: params[:item_id])
+
+      new!
     end
 
     def create
@@ -66,6 +73,7 @@ ActiveAdmin.register Inventory do
 
   filter :item
   filter :department
+  filter :state, as: :select, collection: Inventory.states
 
   member_action :verify, method: :put do
     resource.verify!(:verified, current_user.id)
@@ -74,6 +82,10 @@ ActiveAdmin.register Inventory do
 
   action_item :verify, only: :show, if: proc { policy(resource).verify? } do
     link_to "Verify", verify_admin_inventory_path(resource), method: :put
+  end
+
+  action_item only: :index do
+    link_to 'Request new item', new_admin_item_path
   end
 
   form do |f|

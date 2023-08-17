@@ -14,6 +14,12 @@ ActiveAdmin.register Item do
 
       show!
     end
+
+    def create
+      create! do |format|
+        format.html { redirect_to new_admin_inventory_path(item_id: @item.id) }
+      end
+    end
   end
 
   index do
@@ -29,7 +35,7 @@ ActiveAdmin.register Item do
     actions
   end
 
-  show do
+  show do |item|
     attributes_table do
       row :name
       row :model_number
@@ -39,6 +45,30 @@ ActiveAdmin.register Item do
         image_tag item.image_url, style: "height:100px;width:auto;"
       end
     end
+
+    div class: 'panel' do
+      h3 'Inventories'
+      div class: 'attributes_table' do
+        table do
+          tr do
+            th 'Department'
+            th 'Requested Quantity'
+            th 'State'
+          end
+          item.inventories.each do |inventory|
+            tr do
+              td link_to inventory.department.name, admin_department_path(inventory.department)
+              td inventory.requested_quantity
+              td inventory.state
+            end
+          end
+        end
+      end
+    end
+  end
+
+  action_item :request_item, only: :show do
+    link_to 'Request this Item', new_admin_inventory_path(item_id: resource.id)
   end
 
   filter :name
