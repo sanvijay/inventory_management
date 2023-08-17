@@ -8,6 +8,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, 
          :recoverable, :rememberable, :validatable
 
+  # Purchase Department
+  # HR Department
+  # SPM Department
+  # CMMP Department
+
   enum role: {
     'admin' => 'admin',
     'purchase' =>  'purchase'
