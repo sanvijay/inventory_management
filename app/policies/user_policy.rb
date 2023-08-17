@@ -39,6 +39,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.role == 'admin' && record.role != 'admin'
+    false
   end
 end

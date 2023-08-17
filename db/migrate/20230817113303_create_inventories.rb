@@ -1,10 +1,10 @@
 class CreateInventories < ActiveRecord::Migration[7.0]
   def change
     create_table :inventories do |t|
-      t.string :name
-      t.string :model_number
+      t.references :item, null: false, foreign_key: true
+      t.integer :item_version, null: false
       t.references :department, null: false, foreign_key: true
-      t.text :description
+      t.integer :requested_quantity
 
       t.timestamps
     end

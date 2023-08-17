@@ -21,10 +21,11 @@ class Inventory < ApplicationRecord
     end
   end
 
+  belongs_to :item
   belongs_to :department
   belongs_to :verified_by, class_name: 'User', optional: true
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "department_id", "description", "id", "model_number", "name", "updated_at"]
+    ["created_at", "department_id", "id", "item_id", "item_version", "requested_quantity", "state", "updated_at", "verified_at", "verified_by_id"]
   end
 end

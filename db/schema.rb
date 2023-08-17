@@ -18,17 +18,28 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
   end
 
   create_table "inventories", force: :cascade do |t|
-    t.string "name"
-    t.string "model_number"
+    t.integer "item_id", null: false
+    t.integer "item_version", null: false
     t.integer "department_id", null: false
-    t.text "description"
+    t.integer "requested_quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "state", default: "created", null: false
     t.datetime "verified_at"
     t.integer "verified_by_id"
     t.index ["department_id"], name: "index_inventories_on_department_id"
+    t.index ["item_id"], name: "index_inventories_on_item_id"
     t.index ["verified_by_id"], name: "index_inventories_on_verified_by_id"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "model_number"
+    t.text "description"
+    t.string "reference_url"
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -56,5 +67,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
   end
 
   add_foreign_key "inventories", "departments"
+  add_foreign_key "inventories", "items"
   add_foreign_key "inventories", "users", column: "verified_by_id"
 end

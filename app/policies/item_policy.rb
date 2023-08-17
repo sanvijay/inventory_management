@@ -1,4 +1,4 @@
-class InventoryPolicy < ApplicationPolicy
+class ItemPolicy < ApplicationPolicy
   class Scope
     def initialize(user, scope)
       @user  = user
@@ -43,7 +43,7 @@ class InventoryPolicy < ApplicationPolicy
   end
 
   def verify?
-    user.role.in?(['admin', 'purchase']) && record.created?
+    user.role.in?(['admin', 'purchase'])
   end
 
   def bulk_verify?

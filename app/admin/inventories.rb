@@ -1,5 +1,5 @@
 ActiveAdmin.register Inventory do
-  permit_params :name, :model_number, :department_id, :description
+  permit_params :department_id, :requested_quantity, :item_id
 
   sidebar :history, partial: 'layouts/version', only: :show
 
@@ -11,16 +11,43 @@ ActiveAdmin.register Inventory do
       # @inventory = @inventory.versions[params[:version].to_i].reify if params[:version]
       show!
     end
+
+    def create
+      @inventory = Inventory.new(permitted_params[:inventory])
+      @inventory.item_version = Item.find(permitted_params[:inventory][:item_id]).versions.count
+
+      create!
+    end
+  end
+
+  show do
+    attributes_table do
+      row :item do |inventory|
+        link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
+      end
+
+      row :department
+      row :requested_quantity
+      row :state
+      row :verified_at
+      row :verified_by
+    end
   end
 
   index do
     selectable_column
 
     id_column
-    column :name
-    column :model_number
+    column :item do |inventory|
+      link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
+    end
     column :department
     column :state
+    column :image do |inventory|
+      item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
+
+      image_tag item.image_url, style: 'height:60px;width:auto;'
+    end
 
     actions defaults: true do |inventory|
       link_to 'Verify', verify_admin_inventory_path(inventory), method: :put if policy(inventory).verify?
@@ -29,14 +56,13 @@ ActiveAdmin.register Inventory do
 
   batch_action :bulk_verify, if: proc { policy(Inventory).bulk_verify? }  do |ids|
     batch_action_collection.where(state: 'created', id: ids).each do |inventory|
-      inventory.verify!(:verified, current_user.id)
+      inventory.verify!(:verified, current_user.id) if policy(inventory).verify?
     end
 
     redirect_to collection_path, alert: "The inventories are verified."
   end
 
-  filter :name
-  filter :model_number
+  filter :item
   filter :department
 
   member_action :verify, method: :put do
@@ -50,10 +76,9 @@ ActiveAdmin.register Inventory do
 
   form do |f|
     f.inputs do
-      f.input :name
-      f.input :description
-      f.input :model_number
+      f.input :item
       f.input :department
+      f.input :requested_quantity
     end
 
     f.actions

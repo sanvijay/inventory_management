@@ -39,6 +39,6 @@ class DepartmentPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.role == 'admin'
+    false
   end
 end

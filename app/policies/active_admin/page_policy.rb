@@ -7,11 +7,6 @@ class ActiveAdmin::PagePolicy
   end
 
   def show?
-    case record.name
-    when 'Dashboard'
-      true
-    else
-      user.admin?
-    end
+    record.name == 'Dashboard'
   end
 end
