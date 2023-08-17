@@ -22,7 +22,9 @@ ActiveAdmin.register Item do
     id_column
     column :name
     column :model_number
-    column :reference_url
+    column :image do |item|
+      image_tag item.image_url, style: "height:60px;width:auto;"
+    end
 
     actions
   end

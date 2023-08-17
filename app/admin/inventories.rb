@@ -39,16 +39,16 @@ ActiveAdmin.register Inventory do
   index do
     selectable_column
 
-    id_column
     column :item do |inventory|
       link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
     end
     column :department
+    column :requested_quantity
     column :state
     column :image do |inventory|
       item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
 
-      image_tag item.image_url, style: "height:60px;width:auto;"
+      link_to image_tag(item.image_url, style: "height:60px;width:auto;"), item.image_url, target: "_blank"
     end
 
     actions defaults: true do |inventory|
