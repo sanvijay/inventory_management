@@ -1,4 +1,4 @@
-class UserPolicy < ApplicationPolicy
+class DepartmentPolicy < ApplicationPolicy
   class Scope
     def initialize(user, scope)
       @user  = user
@@ -31,7 +31,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role == 'admin' && record.role != 'admin'
+    user.role == 'admin'
   end
 
   def edit?
@@ -39,6 +39,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.role == 'admin' && record.role != 'admin'
+    user.role == 'admin'
   end
 end
