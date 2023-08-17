@@ -1,0 +1,18 @@
+<% if !@versions.empty? %>
+  <h3>Current Version: <%= @versions.length %></h3>
+
+  <% @versions.each do |version| %>
+    <% user = User.find(version.whodunnit) %>
+    <%= link_to user.email, admin_user_path(user) %>
+
+    <%= version.event %>
+    at
+    <%= version.created_at %>
+    <br>
+    <b>Changes</b>: <%= version.changeset %>
+    <br>
+    <br>
+  <% end %>
+<% else %>
+  <p>This item does not have any registered version.</p>
+<% end %>

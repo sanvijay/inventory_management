@@ -1,5 +1,6 @@
 class Inventory < ApplicationRecord
   include AASM
+  has_paper_trail
 
   enum state: {
     'created' => 'created',
@@ -11,11 +12,9 @@ class Inventory < ApplicationRecord
     state :verified
 
     event :verify do |args|
-      after do |user_id|
+      before do |user_id|
         self.verified_at = Time.zone.now
         self.verified_by_id = user_id
-
-        save!
       end
 
       transitions from: :created, to: :verified 

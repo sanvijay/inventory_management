@@ -1,6 +1,17 @@
 ActiveAdmin.register Inventory do
-
   permit_params :name, :model_number, :department_id, :description
+
+  sidebar :history, partial: 'layouts/version', only: :show
+
+  controller do
+    def show
+      @inventory = Inventory.includes(:versions).find(params[:id])
+      @versions = @inventory.versions
+
+      # @inventory = @inventory.versions[params[:version].to_i].reify if params[:version]
+      show!
+    end
+  end
 
   index do
     selectable_column
