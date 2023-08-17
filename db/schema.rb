@@ -10,11 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_16_202105) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_17_120555) do
   create_table "departments", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.string "name"
+    t.string "model_number"
+    t.integer "department_id", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "state", default: "created", null: false
+    t.datetime "verified_at"
+    t.integer "verified_by_id"
+    t.index ["department_id"], name: "index_inventories_on_department_id"
+    t.index ["verified_by_id"], name: "index_inventories_on_verified_by_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -30,4 +44,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_202105) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "inventories", "departments"
+  add_foreign_key "inventories", "users", column: "verified_by_id"
 end
