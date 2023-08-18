@@ -98,8 +98,11 @@ ActiveAdmin.register Inventory do
     end
 
     actions defaults: true do |inventory|
-      link_to "Verify", verify_admin_inventory_path(inventory), method: :put if policy(inventory).verify?
-      link_to "Reorder", new_admin_inventory_path(item_id: inventory.item.id)
+      links = []
+      links << link_to("Verify", verify_admin_inventory_path(inventory), method: :put) if policy(inventory).verify?
+      links << link_to("Reorder", new_admin_inventory_path(item_id: inventory.item.id))
+
+      links.join(" ").html_safe
     end
   end
 
