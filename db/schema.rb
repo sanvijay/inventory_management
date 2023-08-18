@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_18_165921) do
   create_table "departments", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -27,6 +27,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
     t.string "state", default: "created", null: false
     t.datetime "verified_at"
     t.integer "verified_by_id"
+    t.integer "created_by_id"
+    t.index ["created_by_id"], name: "index_inventories_on_created_by_id"
     t.index ["department_id"], name: "index_inventories_on_department_id"
     t.index ["item_id"], name: "index_inventories_on_item_id"
     t.index ["verified_by_id"], name: "index_inventories_on_verified_by_id"
@@ -40,6 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
     t.string "image_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "size"
   end
 
   create_table "users", force: :cascade do |t|
@@ -68,5 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_130942) do
 
   add_foreign_key "inventories", "departments"
   add_foreign_key "inventories", "items"
+  add_foreign_key "inventories", "users", column: "created_by_id"
   add_foreign_key "inventories", "users", column: "verified_by_id"
 end

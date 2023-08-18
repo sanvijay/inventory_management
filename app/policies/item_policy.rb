@@ -33,7 +33,7 @@ class ItemPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role == "admin"
+    false
   end
 
   def edit?

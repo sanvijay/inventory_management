@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Item do
-  permit_params :name, :model_number, :description, :reference_url, :image_url,
+  permit_params :name, :model_number, :description, :reference_url, :image_url, :size,
     inventories_attributes: [:department_id, :requested_quantity, :state, :item_version]
 
   sidebar :history, partial: "layouts/version", only: :show
+  menu false
 
   controller do
     def show
@@ -27,24 +28,30 @@ ActiveAdmin.register Item do
       image_tag item.image_url, style: "height:60px;width:auto;"
     end
 
-    actions
+    actions defaults: true do |item|
+      link_to "Request", new_admin_inventory_path(item_id: item.id) if policy(item.inventories.build).new?
+    end
   end
 
   show do |item|
     attributes_table do
       row :name
       row :model_number
-      row :description
-      row :reference_url
+      row :size
+      row :reference_url do |item|
+        link_to "Link", item.reference_url, target: "_blank" unless item.reference_url.blank?
+      end
       row :image do |item|
         image_tag item.image_url, style: "height:100px;width:auto;"
       end
     end
 
-    table_for item.inventories do
-      column :department
-      column :requested_quantity
-      column :state
+    panel "Inventories" do
+      table_for item.inventories do
+        column :department
+        column :requested_quantity
+        column :state
+      end
     end
   end
 
@@ -59,6 +66,7 @@ ActiveAdmin.register Item do
     f.inputs do
       f.input :name
       f.input :model_number
+      f.input :size
       f.input :reference_url
       f.input :image_url
     end

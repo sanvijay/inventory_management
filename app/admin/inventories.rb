@@ -23,6 +23,7 @@ ActiveAdmin.register Inventory do
 
     def create
       @inventory = Inventory.new(permitted_params[:inventory])
+      @inventory.created_by = current_user
       @inventory.item_version = Item.find(permitted_params[:inventory][:item_id]).versions.count
 
       create!
@@ -40,6 +41,26 @@ ActiveAdmin.register Inventory do
       row :state
       row :verified_at
       row :verified_by
+      row :requested_by do
+        inventory.created_by
+      end
+      row :requested_at do
+        inventory.created_at
+      end
+    end
+
+    panel "Item" do
+      attributes_table_for inventory.item do
+        row :name
+        row :model_number
+        row :size
+        row :reference_url do |item|
+          link_to "Link", item.reference_url, target: "_blank" unless item.reference_url.blank?
+        end
+        row :image do |item|
+          image_tag item.image_url, style: "height:100px; width:auto;"
+        end
+      end
     end
   end
 
@@ -54,10 +75,15 @@ ActiveAdmin.register Inventory do
 
       item.model_number
     end
+    column :size do |inventory|
+      item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
+
+      item.size
+    end
     column :reference_url do |inventory|
       item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
 
-      link_to "Link", item.reference_url, target: "_blank"
+      link_to "Link", item.reference_url, target: "_blank" unless item.reference_url.blank?
     end
 
     column :department
@@ -73,6 +99,7 @@ ActiveAdmin.register Inventory do
 
     actions defaults: true do |inventory|
       link_to "Verify", verify_admin_inventory_path(inventory), method: :put if policy(inventory).verify?
+      link_to "Reorder", new_admin_inventory_path(item_id: inventory.item.id)
     end
   end
 

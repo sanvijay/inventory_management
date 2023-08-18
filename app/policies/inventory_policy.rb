@@ -33,7 +33,7 @@ class InventoryPolicy < ApplicationPolicy
   end
 
   def update?
-    user.role == "admin"
+    user.role == "admin" && record.opened?
   end
 
   def edit?

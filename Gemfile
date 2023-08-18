@@ -48,6 +48,8 @@ gem "sassc-rails"
 # gem "image_processing", "~> 1.2"
 
 gem "activeadmin"
+gem "activeadmin_addons"
+
 gem "devise"
 gem "pundit", "~> 2.3"
 

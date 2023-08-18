@@ -11,6 +11,6 @@ class Item < ApplicationRecord
   accepts_nested_attributes_for :inventories
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "description", "id", "model_number", "name", "reference_url", "updated_at"]
+    ["created_at", "description", "id", "model_number", "name", "reference_url", "updated_at", "inventories", "versions"]
   end
 end
