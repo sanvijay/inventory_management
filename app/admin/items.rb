@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Item do
-  permit_params :name, :model_number, :description, :reference_url, :image_url
+  permit_params :name, :model_number, :description, :reference_url, :image_url,
+    inventories_attributes: [:department_id, :requested_quantity, :state, :item_version]
 
   sidebar :history, partial: "layouts/version", only: :show
 
@@ -13,12 +14,6 @@ ActiveAdmin.register Item do
       @item = @item.versions[params[:version].to_i] ? @item.versions[params[:version].to_i].reify : @item if params[:version]
 
       show!
-    end
-
-    def create
-      create! do |format|
-        format.html { redirect_to new_admin_inventory_path(item_id: @item.id) }
-      end
     end
   end
 
@@ -46,29 +41,15 @@ ActiveAdmin.register Item do
       end
     end
 
-    div class: 'panel' do
-      h3 'Inventories'
-      div class: 'attributes_table' do
-        table do
-          tr do
-            th 'Department'
-            th 'Requested Quantity'
-            th 'State'
-          end
-          item.inventories.each do |inventory|
-            tr do
-              td link_to inventory.department.name, admin_department_path(inventory.department)
-              td inventory.requested_quantity
-              td inventory.state
-            end
-          end
-        end
-      end
+    table_for item.inventories do
+      column :department
+      column :requested_quantity
+      column :state
     end
   end
 
   action_item :request_item, only: :show do
-    link_to 'Request this Item', new_admin_inventory_path(item_id: resource.id)
+    link_to "Request this Item", new_admin_inventory_path(item_id: resource.id)
   end
 
   filter :name
@@ -77,10 +58,16 @@ ActiveAdmin.register Item do
   form do |f|
     f.inputs do
       f.input :name
-      f.input :description
       f.input :model_number
       f.input :reference_url
       f.input :image_url
+    end
+
+    f.inputs for: :'inventories_attributes[0]' do |inv|
+      inv.input :department_id, as: :select, collection: Department.all
+      inv.input :requested_quantity
+      inv.input :state, as: :hidden, input_html: { value: "opened" }
+      inv.input :item_version, as: :hidden, input_html: { value: item.versions.count.zero? ? 1 : item.versions.count }
     end
 
     f.actions

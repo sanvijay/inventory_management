@@ -45,7 +45,7 @@ class InventoryPolicy < ApplicationPolicy
   end
 
   def verify?
-    user.role.in?(["admin", "purchase"]) && record.created?
+    user.role.in?(["admin", "purchase"]) && record.opened?
   end
 
   def bulk_verify?

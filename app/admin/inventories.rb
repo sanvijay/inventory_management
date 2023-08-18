@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Inventory do
-  permit_params :department_id, :requested_quantity, :item_id
+  permit_params :department_id, :requested_quantity, :item_id, :state
   config.clear_action_items!
 
   sidebar :history, partial: "layouts/version", only: :show
@@ -16,7 +16,7 @@ ActiveAdmin.register Inventory do
     end
 
     def new
-      @inventory = Inventory.new(item_id: params[:item_id])
+      @inventory = Inventory.new(item_id: params[:item_id], state: "opened")
 
       new!
     end
@@ -49,9 +49,22 @@ ActiveAdmin.register Inventory do
     column :item do |inventory|
       link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
     end
+    column :model_number do |inventory|
+      item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
+
+      item.model_number
+    end
+    column :reference_url do |inventory|
+      item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
+
+      link_to "Link", item.reference_url, target: "_blank"
+    end
+
     column :department
     column :requested_quantity
-    column :state
+    column :state do |inventory|
+      status_tag inventory.state
+    end
     column :image do |inventory|
       item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
 
@@ -64,7 +77,7 @@ ActiveAdmin.register Inventory do
   end
 
   batch_action :bulk_verify, if: proc { policy(Inventory).bulk_verify? }  do |ids|
-    batch_action_collection.where(state: "created", id: ids).each do |inventory|
+    batch_action_collection.where(state: "opened", id: ids).each do |inventory|
       inventory.verify!(:verified, current_user.id) if policy(inventory).verify?
     end
 
@@ -85,7 +98,7 @@ ActiveAdmin.register Inventory do
   end
 
   action_item only: :index do
-    link_to 'Request new item', new_admin_item_path
+    link_to "Request new item", new_admin_item_path
   end
 
   form do |f|
@@ -93,6 +106,7 @@ ActiveAdmin.register Inventory do
       f.input :item
       f.input :department
       f.input :requested_quantity
+      f.input :state, as: :hidden
     end
 
     f.actions

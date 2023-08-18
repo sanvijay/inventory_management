@@ -5,12 +5,12 @@ class Inventory < ApplicationRecord
   has_paper_trail
 
   enum state: {
-    "created" => "created",
+    "opened" => "opened",
     "verified" =>  "verified"
   }
 
   aasm column: :state, enum: true do
-    state :created, initial: true
+    state :opened, initial: true
     state :verified
 
     event :verify do |args|
@@ -19,7 +19,7 @@ class Inventory < ApplicationRecord
         self.verified_by_id = user_id
       end
 
-      transitions from: :created, to: :verified
+      transitions from: :opened, to: :verified
     end
   end
 
