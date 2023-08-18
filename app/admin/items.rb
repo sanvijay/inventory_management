@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Item do
   permit_params :name, :model_number, :description, :reference_url, :image_url, :size,
-    inventories_attributes: [:department_id, :requested_quantity, :state, :item_version]
+    inventories_attributes: [:department_id, :requested_quantity, :state, :item_version, :created_by_id]
 
   sidebar :history, partial: "layouts/version", only: :show
   menu false
@@ -39,7 +39,7 @@ ActiveAdmin.register Item do
       row :model_number
       row :size
       row :reference_url do |item|
-        link_to "Link", item.reference_url, target: "_blank" unless item.reference_url.blank?
+        link_to item.reference_url, item.reference_url, target: "_blank" unless item.reference_url.blank?
       end
       row :image do |item|
         image_tag item.image_url, style: "height:100px;width:auto;"
@@ -50,7 +50,12 @@ ActiveAdmin.register Item do
       table_for item.inventories do
         column :department
         column :requested_quantity
-        column :state
+        column :state do |inv|
+          status_tag inv.state
+        end
+        column '' do |inv|
+          link_to "View", admin_inventory_path(inv)
+        end
       end
     end
   end
@@ -73,9 +78,10 @@ ActiveAdmin.register Item do
 
     f.inputs for: :'inventories_attributes[0]' do |inv|
       inv.input :department_id, as: :select, collection: Department.all
-      inv.input :requested_quantity
+      inv.input :requested_quantity, as: :number
       inv.input :state, as: :hidden, input_html: { value: "opened" }
       inv.input :item_version, as: :hidden, input_html: { value: item.versions.count.zero? ? 1 : item.versions.count }
+      inv.input :created_by_id, as: :hidden, input_html: { value: current_user.id }
     end
 
     f.actions
