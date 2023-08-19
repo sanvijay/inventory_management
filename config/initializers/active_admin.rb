@@ -18,7 +18,7 @@ ActiveAdmin.setup do |config|
   #
   # Note: Aim for an image that's 21px high so it fits in the header.
   #
-  config.site_title_image = "/assets/dbme_short_52.jpg"
+  config.site_title_image = "dbme_short_52.jpg"
 
   # == Load Paths
   #

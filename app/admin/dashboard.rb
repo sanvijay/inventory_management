@@ -7,7 +7,7 @@ ActiveAdmin.register_page "Dashboard" do
     div class: "blank_slate_container", id: "dashboard_default_message" do
       span class: "blank_slate" do
         div I18n.t("active_admin.dashboard_welcome.welcome")
-        text_node image_tag("/assets/dbme_long.jpg", style: "height:100px; width:auto;")
+        text_node image_tag("dbme_long.jpg", style: "height:100px; width:auto;")
       end
     end
 
