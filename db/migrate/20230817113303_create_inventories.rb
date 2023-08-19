@@ -5,7 +5,8 @@ class CreateInventories < ActiveRecord::Migration[7.0]
     create_table :inventories do |t|
       t.references :item, null: false, foreign_key: true
       t.integer :item_version, null: false
-      t.references :department, null: false, foreign_key: true
+      t.references :department, foreign_key: true
+      t.string :location
       t.integer :requested_quantity
 
       t.timestamps

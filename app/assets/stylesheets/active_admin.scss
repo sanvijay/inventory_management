@@ -18,6 +18,7 @@
 //   .status_tag { background: #6090DB; }
 
 .status_tag.verified { background: green; }
+.status_tag.opened { background: orange; }
 
 #active_admin_content:has(#filters_sidebar_section) { display: flex; flex-direction: column }
 #active_admin_content div:has(> #filters_sidebar_section) { order: -1; margin: 0 -.5rem; display: flex; width: auto; }
@@ -27,9 +28,10 @@
 div#main_content_wrapper:has(+ div#sidebar > #history_sidebar_section) > #main_content { margin-right: 300px; }
 .table_tools { margin: 1rem 0; }
 
-#filters_sidebar_section { padding-top: 16px; }
+#filters_sidebar_section { padding-top: 8px; }
 #search_status_sidebar_section { display: none; }
 #filters_sidebar_section > h3 { display: none; }
-#filters_sidebar_section > div > form { display: flex; flex-direction: row; justify-content: center; }
+#filters_sidebar_section > div > form { display: flex; flex-direction: row; justify-content: flex-end; }
+#filters_sidebar_section > div { padding: 0px }
 #filters_sidebar_section > div > form > div { padding: 0px 10px; }
 div:has(> #filters_sidebar_section) { flex-direction: column; }

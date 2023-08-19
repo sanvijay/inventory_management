@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register Inventory do
-  permit_params :department_id, :requested_quantity, :item_id, :state
+  permit_params :location, :requested_quantity, :item_id, :state
   config.clear_action_items!
 
+  menu label: 'Inventory'
   sidebar :history, partial: "layouts/version", only: :show
 
   controller do
@@ -36,7 +37,7 @@ ActiveAdmin.register Inventory do
         link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
       end
 
-      row :department
+      row :location
       row :requested_quantity
       row :state
       row :verified_at
@@ -64,7 +65,7 @@ ActiveAdmin.register Inventory do
     end
   end
 
-  index do
+  index title: "Inventory" do
     selectable_column
 
     id_column
@@ -87,7 +88,7 @@ ActiveAdmin.register Inventory do
       link_to "Link", item.reference_url, target: "_blank" unless item.reference_url.blank?
     end
 
-    column :department
+    column :location
     column :requested_quantity
     column :state do |inventory|
       status_tag inventory.state
@@ -116,7 +117,7 @@ ActiveAdmin.register Inventory do
   end
 
   filter :item
-  filter :department
+  filter :location
   filter :state, as: :select, collection: Inventory.states
 
   member_action :verify, method: :put do
@@ -148,7 +149,7 @@ ActiveAdmin.register Inventory do
   form do |f|
     f.inputs do
       f.input :item
-      f.input :department
+      f.input :location
       f.input :requested_quantity
       f.input :state, as: :hidden
     end

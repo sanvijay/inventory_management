@@ -2,7 +2,7 @@
 
 ActiveAdmin.register Item do
   permit_params :name, :model_number, :description, :reference_url, :image_url, :size,
-    inventories_attributes: [:department_id, :requested_quantity, :state, :item_version, :created_by_id]
+    inventories_attributes: [:location, :requested_quantity, :state, :item_version, :created_by_id]
 
   sidebar :history, partial: "layouts/version", only: :show
   menu false
@@ -48,7 +48,7 @@ ActiveAdmin.register Item do
 
     panel "Inventories" do
       table_for item.inventories do
-        column :department
+        column :location
         column :requested_quantity
         column :state do |inv|
           status_tag inv.state
@@ -77,7 +77,7 @@ ActiveAdmin.register Item do
     end
 
     f.inputs for: :'inventories_attributes[0]' do |inv|
-      inv.input :department_id, as: :select, collection: Department.all
+      inv.input :location
       inv.input :requested_quantity, as: :number
       inv.input :state, as: :hidden, input_html: { value: "opened" }
       inv.input :item_version, as: :hidden, input_html: { value: item.versions.count.zero? ? 1 : item.versions.count }

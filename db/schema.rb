@@ -20,14 +20,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_165921) do
   create_table "inventories", force: :cascade do |t|
     t.integer "item_id", null: false
     t.integer "item_version", null: false
-    t.integer "department_id", null: false
+    t.integer "department_id"
+    t.string "location"
     t.integer "requested_quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "state", default: "created", null: false
+    t.string "state", null: false
     t.datetime "verified_at"
     t.integer "verified_by_id"
-    t.integer "created_by_id"
+    t.integer "created_by_id", null: false
     t.index ["created_by_id"], name: "index_inventories_on_created_by_id"
     t.index ["department_id"], name: "index_inventories_on_department_id"
     t.index ["item_id"], name: "index_inventories_on_item_id"
@@ -35,7 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_165921) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.string "model_number"
     t.text "description"
     t.string "reference_url"

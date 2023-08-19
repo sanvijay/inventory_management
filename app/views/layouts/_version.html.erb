@@ -14,10 +14,20 @@
         <th>new</th>
       </tr>
       <% version.changeset.each do |k, v| %>
+        <% next if k.in?(["updated_at", "created_at"]) %>
+
+        <% old_value = v[0] ; new_value = v[1] %>
+        <%
+          if k.include?('url')
+            old_value = link_to("Old link", old_value)
+            new_value = link_to("New link", new_value)
+          end
+        %>
+
         <tr style="border-bottom:1pt solid #e3dbdb;">
           <td><%= k %></td>
-          <td><%= v[0] %></td>
-          <td><%= v[1] %></td>
+          <td><%= old_value %></td>
+          <td><%= new_value %></td>
         </tr>
       <% end %>
     </table>
