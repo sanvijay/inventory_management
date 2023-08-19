@@ -1,6 +1,4 @@
 <% if !@versions.empty? %>
-  <h3>Current Version: <%= @versions.length %></h3>
-
   <% @versions.each do |version| %>
     <% user = User.find(version.whodunnit) %>
     <%= link_to user.email, admin_user_path(user) %>
@@ -9,9 +7,21 @@
     at
     <%= version.created_at %>
     <br>
-    <b>Changes</b>: <%= version.changeset %>
-    <br>
-    <br>
+    <table style="border-collapse: collapse;">
+      <tr>
+        <th>attr</th>
+        <th>old</th>
+        <th>new</th>
+      </tr>
+      <% version.changeset.each do |k, v| %>
+        <tr style="border-bottom:1pt solid #e3dbdb;">
+          <td><%= k %></td>
+          <td><%= v[0] %></td>
+          <td><%= v[1] %></td>
+        </tr>
+      <% end %>
+    </table>
+    <hr />
   <% end %>
 <% else %>
   <p>This item does not have any registered version.</p>

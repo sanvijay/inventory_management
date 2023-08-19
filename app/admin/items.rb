@@ -10,7 +10,7 @@ ActiveAdmin.register Item do
   controller do
     def show
       @item = Item.includes(:versions).find(params[:id])
-      @versions = @item.versions
+      @versions = @item.versions.reorder('created_at DESC')
 
       @item = @item.versions[params[:version].to_i] ? @item.versions[params[:version].to_i].reify : @item if params[:version]
 

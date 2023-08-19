@@ -21,6 +21,15 @@ class Inventory < ApplicationRecord
 
       transitions from: :opened, to: :verified
     end
+
+    event :unverify do |args|
+      before do |aaa|
+        self.verified_at = nil
+        self.verified_by_id = aaa
+      end
+
+      transitions from: :verified, to: :opened
+    end
   end
 
   belongs_to :item

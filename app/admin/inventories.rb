@@ -9,7 +9,7 @@ ActiveAdmin.register Inventory do
   controller do
     def show
       @inventory = Inventory.includes(:versions).find(params[:id])
-      @versions = @inventory.versions
+      @versions = @inventory.versions.reorder('created_at DESC')
 
       # @inventory = @inventory.versions[params[:version].to_i].reify if params[:version]
       show!
@@ -67,8 +67,9 @@ ActiveAdmin.register Inventory do
   index do
     selectable_column
 
+    id_column
     column :item do |inventory|
-      link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version)
+      link_to inventory.item.name, admin_item_path(inventory.item, version: inventory.item_version), style: "white-space: nowrap"
     end
     column :model_number do |inventory|
       item = inventory.item.versions[inventory.item_version.to_i] ? inventory.item.versions[inventory.item_version.to_i].reify : inventory.item
@@ -123,12 +124,25 @@ ActiveAdmin.register Inventory do
     redirect_to resource_path, notice: "verified!"
   end
 
+  member_action :unverify, method: :put do
+    resource.unverify!
+    redirect_to resource_path, notice: "unverified!"
+  end
+
   action_item :verify, only: :show, if: proc { policy(resource).verify? } do
     link_to "Verify", verify_admin_inventory_path(resource), method: :put
   end
 
-  action_item only: :index do
+  action_item :unverify, only: :show, if: proc { policy(resource).unverify? } do
+    link_to "Unverify", unverify_admin_inventory_path(resource), method: :put
+  end
+
+  action_item :request_new_item, only: :index do
     link_to "Request new item", new_admin_item_path
+  end
+
+  action_item :request_this_item, only: :show do
+    link_to "Reorder this item", new_admin_inventory_path(item_id: resource.item.id)
   end
 
   form do |f|
